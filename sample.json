@@ -1,0 +1,14 @@
+{
+  "templates": [
+    "https://github.com/bigtunacan/rgen_ruby_223_template"
+  ],
+  "ignore": [
+    ".git",
+    "README.md"
+  ],
+  "pre-commands": [
+  ],
+  "post-commands": [
+    "echo 'sample' > .ruby-gemset"
+  ]
+}
