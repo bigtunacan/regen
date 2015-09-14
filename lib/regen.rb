@@ -1,6 +1,5 @@
 require 'json'
 require 'optparse'
-require 'pry-byebug'
 require 'fileutils'
 
 options = {}
