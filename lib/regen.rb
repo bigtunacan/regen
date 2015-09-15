@@ -6,7 +6,7 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: rgen.rb [options]"
 
-  opts.on("-c", "--config CONFIGFILE", "Specify Config file") do |c|
+  opts.on("-c", "--config CONFIGFILE", "Specify Config file (Defaults to regen.json)") do |c|
     options[:config_file] = c
   end
 
@@ -15,11 +15,19 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-options[:config_file] ||= "sample.json"
+options[:config_file] ||= "regen.json"
 
 # Create the destination directory if it doesn't exist
 raise 'A destination directory must be specified' unless options[:destination]
 Dir.mkdir options[:destination] unless File.exists? options[:destination]
+
+# Allow pointing to a Git repo for the config file
+
+clones = []
+if options[:config_file].match(/http|https/)
+  `git clone #{options[:config_file]} rgen_clone_tmp`
+  clones << options[:config_file]
+end
 
 file = File.read(options[:config_file])
 data = JSON.parse(file)
@@ -43,9 +51,9 @@ Dir.chdir(start_dir)
 Dir.mkdir "./rgen_tmp"
 data["ignore"] ||= []
 data["templates"] ||= []
-data["templates"].each do |command|
-  if command.match(/http|https/)
-    `git clone #{command} rgen_clone_tmp`
+data["templates"].each do |template|
+  if template.match(/http|https/)
+    `git clone #{template} rgen_clone_tmp` unless clones.include?(template)
     Dir.foreach("rgen_clone_tmp") do |x|
       unless [".", ".."].include?(x)
         FileUtils.mv("rgen_clone_tmp/#{x}", "rgen_tmp/") unless data["ignore"].include?(x)
@@ -53,7 +61,7 @@ data["templates"].each do |command|
     end
     FileUtils.remove_dir "rgen_clone_tmp"
   else
-    `cp -R #{command} ./rgen_tmp/`
+    `cp -R #{template} ./rgen_tmp/`
   end
 end
 
