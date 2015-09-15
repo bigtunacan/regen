@@ -27,6 +27,7 @@ clones = []
 if options[:config_file].match(/http|https/)
   `git clone #{options[:config_file]} rgen_clone_tmp`
   clones << options[:config_file]
+  options[:config_file] = './rgen_clone_tmp/regen.json'
 end
 
 file = File.read(options[:config_file])
@@ -51,9 +52,10 @@ Dir.chdir(start_dir)
 Dir.mkdir "./rgen_tmp"
 data["ignore"] ||= []
 data["templates"] ||= []
+FileUtils.remove_dir "rgen_clone_tmp", true
 data["templates"].each do |template|
   if template.match(/http|https/)
-    `git clone #{template} rgen_clone_tmp` unless clones.include?(template)
+    `git clone #{template} rgen_clone_tmp`
     Dir.foreach("rgen_clone_tmp") do |x|
       unless [".", ".."].include?(x)
         FileUtils.mv("rgen_clone_tmp/#{x}", "rgen_tmp/") unless data["ignore"].include?(x)
@@ -65,7 +67,6 @@ data["templates"].each do |template|
   end
 end
 
-#binding.pry
 `cp -R ./rgen_tmp/ #{options[:destination]}`
 
 # Running any post commands that should come after the
