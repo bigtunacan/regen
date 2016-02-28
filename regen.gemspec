@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'regen'
-  s.version     = '0.0.5'
-  s.date        = '2015-08-30'
+  s.version     = '0.0.6'
+  s.date        = '2016-02-28'
   s.summary     = 'Regen'
   s.description = 'Quickly generate project boilerplate so you can get to work.'
   s.authors     = ['Joiey Seeley']

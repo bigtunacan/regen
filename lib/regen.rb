@@ -18,7 +18,17 @@ end.parse!
 options[:config_file] ||= "regen.json"
 
 # Create the destination directory if it doesn't exist
-raise 'A destination directory must be specified' unless options[:destination]
+<<-EOL
+  A destination directory is required.
+  If a config file is not specified it will default to the regen.json file
+  in the current directory if it exists.
+
+  Example use
+
+  regen -c path/to/configfile -d path/to/destination
+EOL
+
+raise EOL unless options[:destination]
 Dir.mkdir options[:destination] unless File.exists? options[:destination]
 
 # Allow pointing to a Git repo for the config file
