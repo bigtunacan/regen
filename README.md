@@ -2,7 +2,7 @@
 
 **Quickly generate project boilerplate so you can get to work.**
 
-Regen is simple project template generator.  It tries to do just enough to get out of your way and let you get the real work done.
+Regen is a simple project template generator.  It tries to do just enough to get out of your way and let you get the real work done.
 
 Installing Regen is simple
 > gem install regen
